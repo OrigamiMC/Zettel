@@ -13,6 +13,10 @@ plugins {
 
 val paperMavenPublicUrl = "https://repo.papermc.io/repository/maven-public/"
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
     mache("io.papermc:mache:26.1+build.1")
     paperclip("io.papermc:paperclip:3.0.3")
