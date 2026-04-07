@@ -84,7 +84,6 @@ public class CraftBee extends CraftAnimals implements Bee {
 
     @Override
     public void setRollingOverride(net.kyori.adventure.util.TriState rolling) {
-        this.getHandle().rollingOverride = rolling;
 
         this.getHandle().setRolling(this.getHandle().isRolling()); // Refresh rolling state
     }
@@ -96,7 +95,7 @@ public class CraftBee extends CraftAnimals implements Bee {
 
     @Override
     public net.kyori.adventure.util.TriState getRollingOverride() {
-        return this.getHandle().rollingOverride;
+        return null;
     }
 
     @Override

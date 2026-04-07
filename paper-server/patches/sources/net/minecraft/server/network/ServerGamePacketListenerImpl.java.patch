@@ -1795,36 +1795,6 @@
      public void switchToConfig() {
          this.waitingForSwitchToConfig = true;
          this.removePlayerFromWorld();
-@@ -1796,20 +_,27 @@
-     @Override
-     public void handleAttack(final ServerboundAttackPacket packet) {
-         PacketUtils.ensureRunningOnSameThread(packet, this, this.player.level());
-+        if (this.player.isImmobile() || this.player.isSpectator()) return; // Paper
-         if (this.hasClientLoaded()) {
-             ServerLevel level = this.player.level();
-             Entity target = level.getEntityOrPart(packet.entityId());
-+            // Spigot start
-+            if (target == this.player) {
-+                this.disconnect(Component.literal("Cannot interact with self!"), org.bukkit.event.player.PlayerKickEvent.Cause.SELF_INTERACTION); // Paper - kick event cause
-+                return;
-+            }
-+            // Spigot end
-             this.player.resetLastActionTime();
-             if (target != null && level.getWorldBorder().isWithinBounds(target.blockPosition())) {
-                 AABB targetBounds = target.getBoundingBox();
-                 ItemStack mainHandItem = this.player.getMainHandItem();
--                if (this.player.isWithinAttackRange(mainHandItem, targetBounds, 3.0)) {
-+                if (this.player.isWithinAttackRange(mainHandItem, targetBounds, io.papermc.paper.configuration.GlobalConfiguration.get().misc.clientInteractionLeniencyDistance.or(3.0))) { // Paper - configurable lenience
-                     if (!mainHandItem.has(DataComponents.PIERCING_WEAPON)) {
-                         if (target instanceof ItemEntity
-                             || target instanceof ExperienceOrb
-                             || target == this.player
-                             || target instanceof AbstractArrow abstractArrow && !abstractArrow.isAttackable()) {
--                            this.disconnect(Component.translatable("multiplayer.disconnect.invalid_entity_attacked"));
-+                            this.disconnect(Component.translatable("multiplayer.disconnect.invalid_entity_attacked"), org.bukkit.event.player.PlayerKickEvent.Cause.INVALID_ENTITY_ATTACKED); // Paper - add cause
-                             LOGGER.warn("Player {} tried to attack an invalid entity", this.player.getPlainTextName());
-                         } else if (mainHandItem.isItemEnabled(level.enabledFeatures())) {
-                             if (!this.player.cannotAttackWithItem(mainHandItem, 5)) {
 @@ -1819,25 +_,88 @@
                      }
                  }
@@ -1874,7 +1844,7 @@
 +                        final boolean resendData = event.isCancelled() || !ServerGamePacketListenerImpl.this.player.getItemInHand(hand).is(itemType);
 +
 +                        // Entity in bucket - SPIGOT-4048 and SPIGOT-6859
-+                        if (itemType == Items.WATER_BUCKET && target instanceof net.minecraft.world.entity.animal.Bucketable && target instanceof LivingEntity && resendData) {
++                        if (itemType == Items.WATER_BUCKET && target instanceof net.minecraft.world.entity.Bucketable && target instanceof LivingEntity && resendData) {
 +                            target.resendPossiblyDesyncedEntityData(ServerGamePacketListenerImpl.this.player); // Paper - The entire mob gets deleted, so resend it
 +                        }
 +

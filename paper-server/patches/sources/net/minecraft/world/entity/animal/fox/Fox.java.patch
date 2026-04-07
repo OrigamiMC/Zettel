@@ -70,7 +70,7 @@
      }
  
      private void wakeUp() {
-@@ -703,15 +_,33 @@
+@@ -703,15 +_,31 @@
          return this.getTrustedEntities().anyMatch(trusted -> trusted.matches(entity));
      }
  
@@ -85,26 +85,24 @@
 +
 +    @Override
 +    // Paper start - Cancellable death event
-+    protected org.bukkit.event.entity.EntityDeathEvent dropAllDeathLoot(final ServerLevel level, final DamageSource source) {
++    protected void dropAllDeathLoot(final net.minecraft.server.level.ServerLevel level, final net.minecraft.world.damagesource.DamageSource source) {
          ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
 -        if (!itemStack.isEmpty()) {
 +        boolean releaseMouth = false;
 +        if (!itemStack.isEmpty() && level.getGameRules().get(GameRules.MOB_DROPS)) { // Fix MC-153010
              this.spawnAtLocation(level, itemStack);
+-            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
 +            releaseMouth = true;
-+        }
-+
-+        org.bukkit.event.entity.EntityDeathEvent deathEvent = super.dropAllDeathLoot(level, source);
+         }
+ 
+         super.dropAllDeathLoot(level, source);
 +        // Below is code to drop
-+        if (deathEvent == null || deathEvent.isCancelled()) return deathEvent;
 +
 +        if (releaseMouth) {
 +            // Paper end
-             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-         }
- 
--        super.dropAllDeathLoot(level, source);
-+        return deathEvent; // Paper - Cancellable death event
++            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
++        }
++
      }
  
      public static boolean isPathClear(final Fox fox, final LivingEntity target) {

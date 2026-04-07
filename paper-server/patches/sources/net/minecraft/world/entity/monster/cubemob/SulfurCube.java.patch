@@ -1,0 +1,10 @@
+--- a/net/minecraft/world/entity/monster/cubemob/SulfurCube.java
++++ b/net/minecraft/world/entity/monster/cubemob/SulfurCube.java
+@@ -660,7 +_,6 @@
+             }
+         }
+ 
+-        @Override
+         protected void navigateTowards(final Player player) {
+             this.mob.lookAt(player, 10.0F, 10.0F);
+             if (this.mob.getMoveControl() instanceof AbstractCubeMob.CubeMobMoveControl cubeMobMoveControl) {

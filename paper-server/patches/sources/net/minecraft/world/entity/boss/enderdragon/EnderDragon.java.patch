@@ -152,7 +152,7 @@
          if (destroyedBlock) {
              BlockPos randomPos = new BlockPos(
                  x0 + this.random.nextInt(x1 - x0 + 1), y0 + this.random.nextInt(y1 - y0 + 1), z0 + this.random.nextInt(z1 - z0 + 1)
-@@ -501,7 +_,15 @@
+@@ -504,7 +_,15 @@
  
      @Override
      public void kill(final ServerLevel level) {
@@ -169,7 +169,7 @@
          this.gameEvent(GameEvent.ENTITY_DIE);
          if (this.dragonFight != null) {
              this.dragonFight.updateDragon(this);
-@@ -523,18 +_,41 @@
+@@ -526,18 +_,41 @@
              this.level().addParticle(ParticleTypes.EXPLOSION_EMITTER, this.getX() + xo, this.getY() + 2.0 + yo, this.getZ() + zo, 0.0, 0.0, 0.0);
          }
  
@@ -214,7 +214,7 @@
              }
          }
  
-@@ -547,15 +_,15 @@
+@@ -550,15 +_,15 @@
          }
  
          if (this.dragonDeathTime >= 200 && this.level() instanceof ServerLevel level) {
@@ -233,7 +233,7 @@
              this.gameEvent(GameEvent.ENTITY_DIE);
          }
      }
-@@ -738,6 +_,7 @@
+@@ -741,6 +_,7 @@
          super.addAdditionalSaveData(output);
          output.putInt("DragonPhase", this.phaseManager.getCurrentPhase().getPhase().getId());
          output.putInt("DragonDeathTime", this.dragonDeathTime);
@@ -241,7 +241,7 @@
      }
  
      @Override
-@@ -745,6 +_,7 @@
+@@ -748,6 +_,7 @@
          super.readAdditionalSaveData(input);
          input.getInt("DragonPhase").ifPresent(phaseId -> this.phaseManager.setPhase(EnderDragonPhase.getById(phaseId)));
          this.dragonDeathTime = input.getIntOr("DragonDeathTime", 0);
@@ -249,7 +249,7 @@
      }
  
      @Override
-@@ -785,7 +_,7 @@
+@@ -788,7 +_,7 @@
          EnderDragonPhase<? extends DragonPhaseInstance> phase = phaseInstance.getPhase();
          Vec3 result;
          if (phase == EnderDragonPhase.LANDING || phase == EnderDragonPhase.TAKEOFF) {
@@ -258,13 +258,12 @@
              float dist = Math.max((float)Math.sqrt(egg.distToCenterSqr(this.position())) / 4.0F, 1.0F);
              float yOffset = 6.0F / dist;
              float xRotOld = this.getXRot();
-@@ -872,4 +_,19 @@
+@@ -875,4 +_,18 @@
      protected float sanitizeScale(final float scale) {
          return 1.0F;
      }
 +
 +    // CraftBukkit start - SPIGOT-2420: Special case, the ender dragon drops 12000 xp for the first kill and 500 xp for every other kill and this over time.
-+    @Override
 +    public int getExpReward(ServerLevel level, Entity entity) {
 +        // CraftBukkit - Moved from #tickDeath method
 +        boolean shouldDrop = level.getGameRules().get(GameRules.MOB_DROPS);

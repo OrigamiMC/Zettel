@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/gameevent/vibrations/VibrationSystem.java
 +++ b/net/minecraft/world/level/gameevent/vibrations/VibrationSystem.java
-@@ -123,7 +_,7 @@
+@@ -124,7 +_,7 @@
          public static final Codec<VibrationSystem.Data> CODEC = RecordCodecBuilder.create(
              i -> i.group(
                      VibrationInfo.CODEC.lenientOptionalFieldOf("event").forGetter(o -> Optional.ofNullable(o.currentVibration)),
@@ -9,7 +9,7 @@
                      ExtraCodecs.NON_NEGATIVE_INT.fieldOf("event_delay").orElse(0).forGetter(VibrationSystem.Data::getTravelTimeInTicks)
                  )
                  .apply(
-@@ -219,7 +_,14 @@
+@@ -220,7 +_,14 @@
                      return false;
                  } else {
                      Vec3 destination = listenerSourcePos.get();

@@ -185,7 +185,7 @@
                  }
  
                  return true;
-@@ -362,31 +_,42 @@
+@@ -362,31 +_,40 @@
          float health = this.getHealth();
          health -= dmg;
          if (health <= 0.5F) {
@@ -222,19 +222,15 @@
 +            ItemStack itemStack = this.equipment.get(slot); // Paper - move equipment removal past event call
              if (!itemStack.isEmpty() && !EnchantmentHelper.has(itemStack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
 -                Block.popResource(this.level(), this.blockPosition().above(), itemStack);
--            }
--        }
 +                this.drops.add(new DefaultDrop(itemStack, stack -> Block.popResource(this.level(), this.blockPosition().above(), stack))); // CraftBukkit - add to drops // Paper - Restore vanilla drops behavior; mirror so we can destroy it later - though this call site was safe & spawn drops correctly}
-+            }
-+        }
+             }
+         }
 +        // Paper start - move equipment removal past event call
-+        org.bukkit.event.entity.EntityDeathEvent event = this.dropAllDeathLoot(level, source);
-+        if (!event.isCancelled()) {
++        this.dropAllDeathLoot(level, source);
 +            for (EquipmentSlot slot : EquipmentSlot.VALUES) {
 +                this.equipment.set(slot, ItemStack.EMPTY);
 +            }
-+        }
-+        return event;
++        return null;
 +        // Paper end - move equipment removal past event call
      }
  

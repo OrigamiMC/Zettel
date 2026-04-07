@@ -124,7 +124,7 @@
                      return this.consumeWithRemainder(source, dispensed, new ItemStack(Items.BUCKET));
                  } else {
                      return this.defaultDispenseItemBehavior.dispense(source, dispensed);
-@@ -174,12 +_,19 @@
+@@ -175,12 +_,19 @@
                  BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
                  BlockState blockState = level.getBlockState(target);
                  if (blockState.getBlock() instanceof BucketPickup bucket) {
@@ -145,7 +145,7 @@
                          return this.consumeWithRemainder(source, dispensed, new ItemStack(targetType));
                      }
                  } else {
-@@ -194,15 +_,26 @@
+@@ -195,15 +_,26 @@
                  this.setSuccess(true);
                  Direction facing = source.state().getValue(DispenserBlock.FACING);
                  BlockPos targetPos = source.pos().relative(facing);
@@ -173,7 +173,7 @@
                          level.removeBlock(targetPos, false);
                      } else {
                          this.setSuccess(false);
-@@ -224,11 +_,46 @@
+@@ -225,11 +_,46 @@
                  this.setSuccess(true);
                  Level level = source.level();
                  BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
@@ -220,7 +220,7 @@
  
                  return dispensed;
              }
-@@ -242,11 +_,36 @@
+@@ -243,11 +_,36 @@
                      return dispensed;
                  } else {
                      BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
@@ -260,7 +260,7 @@
                      this.setSuccess(true);
                      return dispensed;
                  }
-@@ -260,6 +_,13 @@
+@@ -261,6 +_,13 @@
                      Level level = source.level();
                      Direction direction = source.state().getValue(DispenserBlock.FACING);
                      BlockPos target = source.pos().relative(direction);
@@ -274,7 +274,7 @@
                      if (level.isEmptyBlock(target) && WitherSkullBlock.canSpawnMob(level, target, dispensed)) {
                          level.setBlock(
                              target,
-@@ -275,7 +_,7 @@
+@@ -276,7 +_,7 @@
                          dispensed.shrink(1);
                          this.setSuccess(true);
                      } else {
@@ -283,7 +283,7 @@
                      }
  
                      return dispensed;
-@@ -288,6 +_,13 @@
+@@ -289,6 +_,13 @@
                  Level level = source.level();
                  BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
                  CarvedPumpkinBlock pumpkinBlock = (CarvedPumpkinBlock)Blocks.CARVED_PUMPKIN;
@@ -297,7 +297,7 @@
                  if (level.isEmptyBlock(target) && pumpkinBlock.canSpawnGolem(level, target)) {
                      if (!level.isClientSide()) {
                          level.setBlock(target, pumpkinBlock.defaultBlockState(), Block.UPDATE_ALL);
-@@ -297,7 +_,7 @@
+@@ -298,7 +_,7 @@
                      dispensed.shrink(1);
                      this.setSuccess(true);
                  } else {
@@ -306,7 +306,7 @@
                  }
  
                  return dispensed;
-@@ -335,6 +_,12 @@
+@@ -321,6 +_,12 @@
                      ServerLevel level = source.level();
                      BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
                      BlockState state = level.getBlockState(target);
@@ -319,7 +319,7 @@
                      if (state.is(BlockTags.BEEHIVES, s -> s.hasProperty(BeehiveBlock.HONEY_LEVEL) && s.getBlock() instanceof BeehiveBlock)
                          && state.getValue(BeehiveBlock.HONEY_LEVEL) >= 5) {
                          ((BeehiveBlock)state.getBlock())
-@@ -360,6 +_,13 @@
+@@ -346,6 +_,13 @@
                  this.setSuccess(true);
                  if (blockState.is(Blocks.RESPAWN_ANCHOR)) {
                      if (blockState.getValue(RespawnAnchorBlock.CHARGE) != 4) {
@@ -333,7 +333,7 @@
                          RespawnAnchorBlock.charge(null, level, pos, blockState);
                          dispensed.shrink(1);
                      } else {
-@@ -383,6 +_,28 @@
+@@ -369,6 +_,28 @@
                      this.setSuccess(false);
                      return dispensed;
                  } else {
@@ -362,7 +362,7 @@
                      for (Armadillo armadillo : armadillos) {
                          if (armadillo.brushOffScute(null, dispensed)) {
                              dispensed.hurtAndBreak(16, level, null, item -> {});
-@@ -403,6 +_,13 @@
+@@ -389,6 +_,13 @@
                  BlockState blockState = level.getBlockState(pos);
                  Optional<BlockState> maybeWaxed = HoneycombItem.getWaxed(blockState);
                  if (maybeWaxed.isPresent()) {
@@ -376,7 +376,7 @@
                      level.setBlockAndUpdate(pos, maybeWaxed.get());
                      level.levelEvent(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, pos, 0);
                      dispensed.shrink(1);
-@@ -430,6 +_,12 @@
+@@ -416,6 +_,12 @@
                          if (!level.getBlockState(target).is(BlockTags.CONVERTABLE_TO_MUD)) {
                              return this.defaultDispenseItemBehavior.dispense(source, dispensed);
                          } else {

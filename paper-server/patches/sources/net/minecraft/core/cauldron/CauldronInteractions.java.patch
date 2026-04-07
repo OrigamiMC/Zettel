@@ -81,34 +81,55 @@
                          level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                          level.gameEvent(null, GameEvent.FLUID_PLACE, pos);
                      }
-@@ -148,14 +_,14 @@
-         WATER.put(Items.YELLOW_SHULKER_BOX, CauldronInteractions::shulkerBoxInteraction);
-         LAVA.put(
-             Items.BUCKET,
+@@ -116,27 +_,27 @@
+         WATER.put(ItemTags.CAULDRON_CAN_REMOVE_DYE, CauldronInteractions::dyedItemIteration);
+         Items.BANNER.forEach(banner -> WATER.put(banner, CauldronInteractions::bannerInteraction));
+         Items.DYED_SHULKER_BOX.forEach(dyedShulkerBox -> WATER.put(dyedShulkerBox, CauldronInteractions::shulkerBoxInteraction));
+-        LAVA.put(
+-            Items.BUCKET,
 -            (state, level, pos, player, hand, itemInHand) -> fillBucket(
 -                state, level, pos, player, hand, itemInHand, new ItemStack(Items.LAVA_BUCKET), var0x -> true, SoundEvents.BUCKET_FILL_LAVA
-+            (state, level, pos, player, hand, itemInHand, hitDirection) -> fillBucket( // Paper - add hitDirection
-+                state, level, pos, player, hand, itemInHand, new ItemStack(Items.LAVA_BUCKET), var0x -> true, SoundEvents.BUCKET_FILL_LAVA, hitDirection // Paper - add hitDirection
-             )
-         );
+-            )
+-        );
++        // LAVA.put(
++        //     Items.BUCKET,
++        //     (state, level, pos, player, hand, itemInHand) -> fillBucket(
++        //         state, level, pos, player, hand, itemInHand, new ItemStack(Items.LAVA_BUCKET), var0x -> true, SoundEvents.BUCKET_FILL_LAVA
++        //     )
++        // );
          addDefaultInteractions(LAVA);
-         POWDER_SNOW.put(
-             Items.BUCKET,
+-        POWDER_SNOW.put(
+-            Items.BUCKET,
 -            (state, level, pos, player, hand, itemInHand) -> fillBucket(
-+            (state, level, pos, player, hand, itemInHand, hitDirection) -> fillBucket( // Paper - add hitDirection
-                 state,
-                 level,
-                 pos,
-@@ -164,7 +_,7 @@
-                 itemInHand,
-                 new ItemStack(Items.POWDER_SNOW_BUCKET),
-                 s -> s.getValue(LayeredCauldronBlock.LEVEL) == 3,
+-                state,
+-                level,
+-                pos,
+-                player,
+-                hand,
+-                itemInHand,
+-                new ItemStack(Items.POWDER_SNOW_BUCKET),
+-                s -> s.getValue(LayeredCauldronBlock.LEVEL) == 3,
 -                SoundEvents.BUCKET_FILL_POWDER_SNOW
-+                SoundEvents.BUCKET_FILL_POWDER_SNOW, hitDirection // Paper - add hitDirection
-             )
-         );
+-            )
+-        );
++        // POWDER_SNOW.put(
++        //     Items.BUCKET,
++        //     (state, level, pos, player, hand, itemInHand) -> fillBucket(
++        //         state,
++        //         level,
++        //         pos,
++        //         player,
++        //         hand,
++        //         itemInHand,
++        //         new ItemStack(Items.POWDER_SNOW_BUCKET),
++        //         s -> s.getValue(LayeredCauldronBlock.LEVEL) == 3,
++        //         SoundEvents.BUCKET_FILL_POWDER_SNOW, hitDirection // Paper - add hitDirection
++        //     )
++        // );
          addDefaultInteractions(POWDER_SNOW);
-@@ -187,15 +_,46 @@
+     }
+ 
+@@ -157,15 +_,46 @@
          final Predicate<BlockState> canFill,
          final SoundEvent soundEvent
      ) {
@@ -156,7 +177,7 @@
                  level.playSound(null, pos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
                  level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
              }
-@@ -213,12 +_,42 @@
+@@ -183,12 +_,42 @@
          final BlockState newState,
          final SoundEvent soundEvent
      ) {
@@ -201,7 +222,7 @@
              level.playSound(null, pos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
              level.gameEvent(null, GameEvent.FLUID_PLACE, pos);
          }
-@@ -227,23 +_,23 @@
+@@ -197,23 +_,23 @@
      }
  
      private static InteractionResult fillWaterInteraction(
@@ -230,7 +251,7 @@
      ) {
          return (InteractionResult)(isUnderWater(level, pos)
              ? InteractionResult.CONSUME
-@@ -254,22 +_,27 @@
+@@ -224,22 +_,27 @@
                  hand,
                  itemInHand,
                  Blocks.POWDER_SNOW_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3),
@@ -261,7 +282,7 @@
              }
  
              return InteractionResult.SUCCESS;
-@@ -277,18 +_,23 @@
+@@ -247,18 +_,23 @@
      }
  
      private static InteractionResult bannerInteraction(
@@ -287,7 +308,7 @@
              }
  
              return InteractionResult.SUCCESS;
-@@ -296,15 +_,20 @@
+@@ -266,15 +_,20 @@
      }
  
      private static InteractionResult dyedItemIteration(

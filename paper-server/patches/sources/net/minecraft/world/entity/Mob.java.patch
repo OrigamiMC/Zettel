@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/Mob.java
 +++ b/net/minecraft/world/entity/Mob.java
-@@ -92,6 +_,14 @@
+@@ -96,6 +_,14 @@
  import net.minecraft.world.ticks.ContainerSingleItem;
  import org.jspecify.annotations.Nullable;
  
@@ -15,7 +15,7 @@
  public abstract class Mob extends LivingEntity implements Targeting, EquipmentUser, Leashable {
      private static final EntityDataAccessor<Byte> DATA_MOB_FLAGS_ID = SynchedEntityData.defineId(Mob.class, EntityDataSerializers.BYTE);
      private static final int MOB_FLAG_NO_AI = 1;
-@@ -127,6 +_,7 @@
+@@ -131,6 +_,7 @@
      private final BodyRotationControl bodyRotationControl;
      protected PathNavigation navigation;
      public GoalSelector goalSelector;
@@ -23,7 +23,7 @@
      public GoalSelector targetSelector;
      private @Nullable LivingEntity target;
      private final Sensing sensing;
-@@ -139,6 +_,8 @@
+@@ -143,6 +_,8 @@
      private Leashable.@Nullable LeashData leashData;
      private BlockPos homePosition = BlockPos.ZERO;
      private int homeRadius = -1;
@@ -32,7 +32,7 @@
  
      protected Mob(final EntityType<? extends Mob> type, final Level level) {
          super(type, level);
-@@ -244,7 +_,44 @@
+@@ -248,7 +_,44 @@
      }
  
      public void setTarget(final @Nullable LivingEntity target) {
@@ -78,7 +78,7 @@
      }
  
      @Override
-@@ -383,13 +_,27 @@
+@@ -387,13 +_,27 @@
          if (this.isNoAi()) {
              output.putBoolean("NoAI", this.isNoAi());
          }
@@ -108,7 +108,7 @@
          this.dropChances = input.read("drop_chances", DropChances.CODEC).orElse(DropChances.DEFAULT);
          this.readLeashData(input);
          this.homeRadius = input.getIntOr("home_radius", -1);
-@@ -401,6 +_,13 @@
+@@ -405,6 +_,13 @@
          this.lootTable = input.read("DeathLootTable", LootTable.KEY_CODEC);
          this.lootTableSeed = input.getLongOr("DeathLootTableSeed", 0L);
          this.setNoAi(input.getBooleanOr("NoAI", false));
@@ -122,7 +122,7 @@
      }
  
      @Override
-@@ -465,6 +_,11 @@
+@@ -469,6 +_,11 @@
              for (ItemEntity entity : this.level()
                  .getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(pickupReach.getX(), pickupReach.getY(), pickupReach.getZ()))) {
                  if (!entity.isRemoved() && !entity.getItem().isEmpty() && !entity.hasPickUpDelay() && this.wantsToPickUp(serverLevel, entity.getItem())) {
@@ -134,7 +134,7 @@
                      this.pickUpItem(serverLevel, entity);
                  }
              }
-@@ -515,18 +_,24 @@
+@@ -519,18 +_,24 @@
  
      protected void pickUpItem(final ServerLevel level, final ItemEntity entity) {
          ItemStack itemStack = entity.getItem();
@@ -161,7 +161,7 @@
          EquipmentSlot slot = this.getEquipmentSlotForItem(itemStack);
          if (!this.isEquippableInSlot(itemStack, slot)) {
              return ItemStack.EMPTY;
-@@ -539,10 +_,18 @@
+@@ -543,10 +_,18 @@
                  canReplace = current.isEmpty();
              }
  
@@ -181,7 +181,7 @@
                  }
  
                  ItemStack toEquip = slot.limit(itemStack);
-@@ -651,25 +_,38 @@
+@@ -684,25 +_,38 @@
          return this.isPassenger() || this.isLeashed();
      }
  
@@ -233,7 +233,7 @@
                      this.noActionTime = 0;
                  }
              }
-@@ -681,6 +_,15 @@
+@@ -714,6 +_,15 @@
      @Override
      protected final void serverAiStep() {
          this.noActionTime++;
@@ -249,7 +249,7 @@
          ProfilerFiller profiler = Profiler.get();
          profiler.push("sensing");
          this.sensing.tick();
-@@ -859,14 +_,69 @@
+@@ -888,14 +_,69 @@
              public boolean stillValid(final Player player) {
                  return player.getVehicle() == Mob.this || player.isWithinEntityInteractionRange(Mob.this, 4.0);
              }
@@ -319,21 +319,15 @@
              ItemStack itemStack = this.getItemBySlot(slot);
              float dropChance = this.dropChances.byEquipment(slot);
              if (dropChance != 0.0F) {
-@@ -886,7 +_,13 @@
+@@ -915,7 +_,6 @@
                      }
  
                      this.spawnAtLocation(level, itemStack);
-+                    if (this.clearEquipmentSlots) { // Paper
-                     this.setItemSlot(slot, ItemStack.EMPTY);
-+                    // Paper start
-+                    } else {
-+                        this.clearedEquipmentSlots.add(slot);
-+                    }
-+                    // Paper end
+-                    this.setItemSlot(slot, ItemStack.EMPTY);
                  }
              }
          }
-@@ -910,7 +_,9 @@
+@@ -939,7 +_,9 @@
                      slotsPreventedFromDropping.add(slot);
                  } else if (this.dropChances.isPreserved(slot)) {
                      this.setItemSlot(slot, ItemStack.EMPTY);
@@ -343,7 +337,7 @@
                  }
              }
          }
-@@ -1210,6 +_,22 @@
+@@ -1239,6 +_,22 @@
          final EntitySpawnReason spawnReason,
          final ConversionParams.AfterConversion<T> afterConversion
      ) {
@@ -366,7 +360,7 @@
          if (this.isRemoved()) {
              return null;
          } else {
-@@ -1218,13 +_,23 @@
+@@ -1247,13 +_,23 @@
                  return null;
              } else {
                  params.type().convert(this, newMob, params);
@@ -393,7 +387,7 @@
                  }
  
                  return newMob;
-@@ -1235,7 +_,17 @@
+@@ -1264,7 +_,17 @@
      public <T extends Mob> @Nullable T convertTo(
          final EntityType<T> entityType, final ConversionParams params, final ConversionParams.AfterConversion<T> afterConversion
      ) {
@@ -412,7 +406,7 @@
      }
  
      @Override
-@@ -1276,7 +_,17 @@
+@@ -1305,7 +_,17 @@
      public boolean startRiding(final Entity entity, final boolean force, final boolean sendEventAndTriggers) {
          boolean result = super.startRiding(entity, force, sendEventAndTriggers);
          if (result && this.isLeashed()) {
@@ -431,7 +425,7 @@
          }
  
          return result;
-@@ -1439,7 +_,7 @@
+@@ -1474,7 +_,7 @@
                  Set<WrappedGoal> availableGoals = this.goalSelector.getAvailableGoals();
                  List<DebugGoalInfo.DebugGoal> goalInfo = new ArrayList<>(availableGoals.size());
                  availableGoals.forEach(

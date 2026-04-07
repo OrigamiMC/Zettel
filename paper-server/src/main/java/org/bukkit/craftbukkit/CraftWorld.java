@@ -1863,7 +1863,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public Collection<org.bukkit.Material> getInfiniburn() {
-        return com.google.common.collect.Sets.newHashSet(com.google.common.collect.Iterators.transform(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getTagOrEmpty(this.getHandle().dimensionType().infiniburn()).iterator(), blockHolder -> CraftBlockType.minecraftToBukkit(blockHolder.value())));
+        return com.google.common.collect.Sets.newHashSet(com.google.common.collect.Iterators.transform(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getTagOrEmpty(this.getHandle().dimensionType().infiniburn().unwrapKey().get()).iterator(), blockHolder -> CraftBlockType.minecraftToBukkit(blockHolder.value())));
     }
 
     @Override

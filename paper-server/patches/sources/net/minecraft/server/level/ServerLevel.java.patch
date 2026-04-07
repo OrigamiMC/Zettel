@@ -940,16 +940,7 @@
              if (this.sendParticles(player, overrideLimiter, x, y, z, packet)) {
                  result++;
              }
-@@ -1421,7 +_,7 @@
-     public @Nullable BlockPos findNearestMapStructure(
-         final TagKey<Structure> structureTag, final BlockPos origin, final int maxSearchRadius, final boolean createReference
-     ) {
--        if (!this.server.getWorldGenSettings().options().generateStructures()) {
-+        if (!this.worldGenSettings.options().generateStructures()) { // CraftBukkit
-             return null;
-         } else {
-             Optional<HolderSet.Named<Structure>> tag = this.registryAccess().lookupOrThrow(Registries.STRUCTURE).get(structureTag);
-@@ -1479,10 +_,36 @@
+@@ -1475,10 +_,36 @@
  
      @Override
      public @Nullable MapItemSavedData getMapData(final MapId id) {
@@ -987,7 +978,7 @@
          this.getServer().getDataStorage().set(MapItemSavedData.type(id), data);
      }
  
-@@ -1492,7 +_,21 @@
+@@ -1488,7 +_,21 @@
  
      @Override
      public void setRespawnData(final LevelData.RespawnData respawnData) {
@@ -1010,7 +1001,7 @@
      }
  
      @Override
-@@ -1529,6 +_,11 @@
+@@ -1525,6 +_,11 @@
                  this.debugSynchronizers.dropPoi(immutable);
              }));
              newType.ifPresent(poiType -> this.getServer().execute(() -> {
@@ -1022,7 +1013,7 @@
                  PoiRecord record = this.getPoiManager().add(immutable, (Holder<PoiType>)poiType);
                  if (record != null) {
                      this.debugSynchronizers.registerPoi(record);
-@@ -1677,12 +_,12 @@
+@@ -1673,12 +_,12 @@
      }
  
      public boolean isFlat() {
@@ -1037,7 +1028,7 @@
      }
  
      public @Nullable EnderDragonFight getDragonFight() {
-@@ -1690,7 +_,7 @@
+@@ -1686,7 +_,7 @@
      }
  
      public WeatherData getWeatherData() {
@@ -1046,7 +1037,7 @@
      }
  
      @Override
-@@ -1737,6 +_,7 @@
+@@ -1733,6 +_,7 @@
  
      @Override
      public LevelEntityGetter<Entity> getEntities() {
@@ -1054,7 +1045,7 @@
          return this.entityManager.getEntityGetter();
      }
  
-@@ -1841,8 +_,30 @@
+@@ -1837,8 +_,30 @@
      }
  
      public GameRules getGameRules() {
@@ -1087,7 +1078,7 @@
  
      @Override
      public CrashReportCategory fillReportDetails(final CrashReport report) {
-@@ -1905,6 +_,7 @@
+@@ -1901,6 +_,7 @@
              if (entity instanceof WaypointTransmitter waypoint && waypoint.isTransmittingWaypoint()) {
                  ServerLevel.this.getWaypointManager().trackWaypoint(waypoint);
              }
@@ -1095,7 +1086,7 @@
          }
  
          @Override
-@@ -1918,17 +_,24 @@
+@@ -1914,17 +_,24 @@
  
          @Override
          public void onTickingStart(final Entity entity) {
@@ -1121,7 +1112,7 @@
              if (entity instanceof ServerPlayer player) {
                  ServerLevel.this.players.add(player);
                  if (player.isReceivingWaypoints()) {
-@@ -1943,7 +_,7 @@
+@@ -1939,7 +_,7 @@
              }
  
              if (entity instanceof Mob mob) {
@@ -1130,7 +1121,7 @@
                      String message = "onTrackingStart called during navigation iteration";
                      Util.logAndPauseIfInIde(
                          "onTrackingStart called during navigation iteration", new IllegalStateException("onTrackingStart called during navigation iteration")
-@@ -1960,10 +_,52 @@
+@@ -1956,10 +_,52 @@
              }
  
              entity.updateDynamicGameEventListener(DynamicGameEventListener::add);
@@ -1183,7 +1174,7 @@
              ServerLevel.this.getChunkSource().removeEntity(entity);
              if (entity instanceof ServerPlayer player) {
                  ServerLevel.this.players.remove(player);
-@@ -1972,7 +_,7 @@
+@@ -1968,7 +_,7 @@
              }
  
              if (entity instanceof Mob mob) {
@@ -1192,7 +1183,7 @@
                      String message = "onTrackingStart called during navigation iteration";
                      Util.logAndPauseIfInIde(
                          "onTrackingStart called during navigation iteration", new IllegalStateException("onTrackingStart called during navigation iteration")
-@@ -1990,6 +_,15 @@
+@@ -1986,6 +_,15 @@
  
              entity.updateDynamicGameEventListener(DynamicGameEventListener::remove);
              ServerLevel.this.debugSynchronizers.dropEntity(entity);
@@ -1208,7 +1199,7 @@
          }
  
          @Override
-@@ -1997,4 +_,24 @@
+@@ -1993,4 +_,24 @@
              entity.updateDynamicGameEventListener(DynamicGameEventListener::move);
          }
      }

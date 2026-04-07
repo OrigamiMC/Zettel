@@ -5,13 +5,13 @@ import org.bukkit.entity.Slime;
 
 public class CraftSlime extends CraftMob implements Slime, CraftEnemy {
 
-    public CraftSlime(CraftServer server, net.minecraft.world.entity.monster.Slime entity) {
+    public CraftSlime(CraftServer server, net.minecraft.world.entity.monster.cubemob.AbstractCubeMob entity) {
         super(server, entity);
     }
 
     @Override
-    public net.minecraft.world.entity.monster.Slime getHandle() {
-        return (net.minecraft.world.entity.monster.Slime) this.entity;
+    public net.minecraft.world.entity.monster.cubemob.Slime getHandle() {
+        return (net.minecraft.world.entity.monster.cubemob.Slime) this.entity;
     }
 
     @Override
@@ -26,11 +26,11 @@ public class CraftSlime extends CraftMob implements Slime, CraftEnemy {
 
     @Override
     public boolean canWander() {
-        return this.getHandle().canWander();
+        return true;
     }
 
     @Override
     public void setWander(boolean canWander) {
-        this.getHandle().setWander(canWander);
+
     }
 }
