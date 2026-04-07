@@ -14,7 +14,7 @@ plugins {
 val paperMavenPublicUrl = "https://repo.papermc.io/repository/maven-public/"
 
 dependencies {
-    mache("io.papermc:mache:26.2-snapshot-1+build.local-SNAPSHOT")
+    mache("io.papermc:mache:26.2-snapshot-1+build.1")
     paperclip("io.papermc:paperclip:3.0.3")
 }
 

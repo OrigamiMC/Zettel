@@ -42,6 +42,7 @@ subprojects {
     repositories {
         mavenCentral()
         maven(paperMavenPublicUrl)
+        maven (url = "https://maven.fancyspaces.net/origami/releases")
     }
 
     extensions.configure<PublishingExtension> {
