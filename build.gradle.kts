@@ -50,6 +50,26 @@ subprojects {
                 name = "paperReleases"
                 credentials(PasswordCredentials::class)
             }
+
+            maven (url = "https://maven.fancyspaces.net/origami/releases") {
+                name = "origamiReleases"
+
+                credentials(HttpHeaderCredentials::class) {
+                    name = "Authorization"
+                    value = "ApiKey " + providers
+                        .gradleProperty("fancyspacesApiKey")
+                        .orElse(
+                            providers
+                                .environmentVariable("FANCYSPACES_API_KEY")
+                                .orElse("")
+                        )
+                        .get()
+                }
+
+                authentication {
+                    create<HttpHeaderAuthentication>("header")
+                }
+            }
         }
     }
 }
